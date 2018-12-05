@@ -2,11 +2,11 @@
 title: "Lung Cancer Model"
 ---
 
-We investigated the relationship between chemical release and lung cancer incidence at the county level for seven known carcinogens. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$*$ and smoking$**$ to be significant predictors of lung cancer incidence, so we included these in our final model.
+We investigated the relationship between chemical release and lung cancer incidence at the county level for seven known carcinogens. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$^*$ and smoking$^{**}$ to be significant predictors of lung cancer incidence, so we included these in our final model.
 
-$*$ Median income (in thousands) was adjusted for at the county level by year. 
+$^*$ Median income (in thousands) was adjusted for at the county level by year. 
 
-$**$ Percent of current/previous smokers was adjusted for at the state level by year.
+$^{**}$ Percent of current/previous smokers was adjusted for at the state level by year.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
