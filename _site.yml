@@ -3,8 +3,10 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "About"
+    - text: "Lung Cancer Model"
       href: about.html
+    - text: "TRI-SEER Dashboard"
+      href: https://jamesdalg.shinyapps.io/seer_dash/
     - icon: fa-github fa-lg
       href: https://github.com/toxgisfinalproject/report
 output:
