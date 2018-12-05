@@ -1,7 +1,38 @@
 ---
-title: "Holy cow!"
+title: "Geographic Associations Between Industrial Waste and Cancer"
 ---
 
-### I have a webpage!
+### Project Motivation
+It is well known that exposure to certain chemicals can be a causal factor for many cancers, and many of the chemicals released from industry are carcinogenic. For this project, we wanted to know if we could use datasets that are publicly available to see if there is a geographic association between incidences of cancer and amount of toxic waste dumping. We hope our project results can help people understand the importance of reducing the amount of toxic waste dumping and create a cleaner, healthier living environment. 
 
-And I can put all kinds of stuff on it!
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
