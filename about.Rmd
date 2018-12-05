@@ -1,8 +1,83 @@
 ---
-title: "About"
+title: "Lung Cancer Model"
 ---
 
-###
+We investigated the relationship between chemical release and lung cancer incidence at the county level for seven known carcinogens. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$*$ and smoking$**$ to be significant predictors of lung cancer incidence, so we included these in our final model.
+
+$*$ Median income (in thousands) was adjusted for at the county level by year. 
+
+$**$ Percent of current/previous smokers was adjusted for at the state level by year.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(plotly)
+
+# clean data by mapping to lowercase and replacing spaces with underscore
+# filtered where values of release was 0
+cancer_county_chem_pop <- readRDS('./data/cancer_county_chem_pop.rds') %>% 
+  janitor::clean_names() %>% 
+  ungroup() %>% 
+  filter(
+    total_rel_summ != 0,
+    pop_est > 50000) %>% 
+  mutate(
+    chemical = map(chemical, tolower),
+    chemical = str_replace(chemical, " ", "_"),
+    total_rel_log = log(total_rel_summ))
+
+# only interested in chemicals that appear at least 10 times, for lung cancer only
+# use inner join
+lung_chemical = cancer_county_chem_pop %>% 
+  filter(cancer == "lung") %>% 
+  group_by(chemical) %>% 
+  summarise(freq = n()) %>% 
+  arrange(freq) %>% 
+  filter(freq >= 10) %>% 
+  dplyr::select(chemical)
+lung_chemical2 = cancer_county_chem_pop %>% 
+  filter(cancer == "lung")
+  
+cancer_chem_lung = dplyr::inner_join(lung_chemical, lung_chemical2, by = "chemical")
+
+# Spread with each chemical release as separate variable, log of total release as value
+lung_spread = cancer_chem_lung %>% 
+  dplyr::select(-total_rel_summ) %>% 
+  spread(key = chemical, value = total_rel_log) %>% 
+  janitor::clean_names()
+
+# link income data
+census_income_df <- readRDS('./data/census_income_pop_tidy.rds') %>% 
+  janitor::clean_names() %>% 
+  separate(area_name, into = c("county", "st"), sep = ",") %>% 
+  filter(st != "NA") %>% 
+  map_df(tolower) %>% 
+  dplyr::select(year = year_inc, st, county, med_income) %>% 
+  mutate(
+    year = as.integer(year),
+    st = str_replace(st, " ", ""))
+# join income and lung cancer data
+# incidence of cancer per million
+lung_spread_income = dplyr::left_join(lung_spread, census_income_df, by = c("county" = "county", "year" = "year", "st" = "st")) %>% 
+  dplyr::select(med_income, everything()) %>%
+  arrange(desc(med_income)) %>% 
+  mutate(
+    med_income = as.numeric(med_income),
+    incidence_100k = round((prevalence * 100000), digits = 0)) %>% 
+  dplyr::select(incidence_100k, everything())
+
+## plotly graph
+plot_ly(data = lung_spread_income, text = ~paste("State: ", st, '<br>County: ', county, '<br>Year: ', year), colors = "Set1") %>% 
+  add_trace(x = ~acrylonitrile, y = ~incidence_100k, color = I("tomato"), name = 'acrylonitrile', opacity = 0.8) %>% 
+  add_trace(x = ~epichlorohydrin, y = ~incidence_100k, color = I("orange"), name = 'epichlorohydrin', opacity = 0.8) %>% 
+  add_trace(x = ~ethyl_acrylate, y = ~incidence_100k, color = I("seagreen"), name = 'ethyl_acrylate', opacity = 0.8) %>% 
+  add_trace(x = ~formaldehyde, y = ~incidence_100k, color = I("royalblue"), name = 'formaldehyde', opacity = 0.8) %>% 
+  add_trace(x = ~trans_1_3_dichloropropene, y = ~incidence_100k, color = I("mediumpurple"), name = 'trans-1,3-dichloropropene', opacity = 0.8) %>% 
+  add_trace(x = ~vinyl_acetate, y = ~incidence_100k, color = I("olivedrab"), name = 'vinyl-acetate', opacity = 0.8) %>% 
+  add_trace(x = ~x1_3_butadiene, y = ~incidence_100k, color = I("hotpink3"), name = '1,3-butadiene', opacity = 0.8) %>% 
+  layout(title = 'Lung Cancer Incidence by Released Waste',
+         xaxis = list(title = "Pounds of Annual Released Waste (log-scaled)"),
+         yaxis = list(title = "Lung Cancer Incidence per 100 Thousand per Year"))
+```
 
 
 
