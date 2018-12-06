@@ -2,12 +2,26 @@
 title: "Lung Cancer Model"
 ---
 
-We investigated the relationship between chemical release and lung cancer incidence at the county level for different chemicals. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$^*$ and smoking prevalence$^{**}$ to be significant predictors of lung cancer incidence, so we included these in our final models. We found seven chemicals to have a significant positive correlation between lung cancer incidence and amount of waste released.
+Lung cancer is the leading cause of cancer deaths in the United States. While previous research has demonstrated a clear association between tobacco use and lung cancer, many new cases of lung cancer arise amongst non-smokers. We hypothesized that proximity to chemical waste release may increase the risk for lung cancer. Furthermore, proximity may increase exposure to airborne waste release.
+  
+We investigated the relationship between chemical release and lung cancer incidence, at the county level, for seven known carcinogens. Linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We adjusted for two potential confounders, median income$^*$ as a proxy for socioeconomic status and prevalence of current or previous smokers$^{**}$. Based on our findings, we conclude that acrylonitrile, epichlorohydrin, ethyl-acrylate, formaldehyde, trans-1,3-dichloropropene, 1,3-butadiene release are significant predictors of lung cancer incidence (p-value < 0.05). In our analysis, median income and smoking prevalence were not significant confounders for epichlorohydrin and trans-1,3-dichloropropene release. 
+  
+Adjusting for median income, vinyl-acetate release approaches significance (p-value = 0.07) as a predictor of lung cancer incidence. In separate analyses, we find that smoking prevalence and vinyl acetate are independent predictors of lung cancer incidence. Furthermore, vinyl acetate release and smoking prevalence are correlated to an extent that is similar to the relationship between vinyl acetate and lung cancer incidence. Together in multiple linear regression model, both are not significant predictors, suggesting that these two predictors may be redundant and accounting for similar portions of the random errors in the model. If these are redundant variables, we might conclude that there is some relationship that makes the variables non-independent in nature. Indeed, this may be the case: In a mass spectrometry [analysis](https://www.ncbi.nlm.nih.gov/pubmed/12433113) of cigarette data, it was found that vinyl acetate is a component of cigarette smoke. Therefore, we removed smoking prevalence as a covariate from our model. 
+  
+$^*$ median income (in thousands) was adjusted for at the county level by year<br>
+$^{**}$ percent of current/previous smokers was adjusted for at the state level by year
 
-$^*$ Median income (in thousands) was adjusted for at the county level by year. 
+### Regression Models for Lung Cancer Incidence
 
-$^{**}$ Percent of current/previous smokers was adjusted for at the state level by year.
+**Acrylonitrile Model (adjusted $R^2$: 0.29, p-value: < 0.05):** Lung Cancer Incidence = 24.37 + 4.09 $*$ ln(pounds acrylonitrile release) + 8.23e-01 $*$ (percent current/previous smokers) - 1.798e-07 $*$ (median income)<br>
+**Epichlorohydrin Model (adjusted $R^2$: 0.15, p-value: < 0.05):** Lung Cancer Incidence = 59.58 + 2.18 $*$ ln(pounds epichlorohydrin release)<br>
+**Ethyl-acrylate Model (adjusted $R^2$: 0.25, p-value: < 0.05):** Lung Cancer Incidence = 60.63 + 1.24 $*$ ln(pounds ethyl-acrylate release) + 0.88 $*$ (percent current/previous smokers) - 7.257e-07 $*$ (median income)<br>
+**Formaldehyde Model (adjusted $R^2$: 0.21, p-value: < 0.05):** Lung Cancer Incidence = 17.81 + 1.40 $*$ ln(pounds formaldehyde release) + 1.15 $*$ (percent current/previous smokers) - 2.77e-7 $*$ (median income)<br>
+**Trans-1,3-dichloropropene Model (adjusted $R^2$: 0.90, p-value: < 0.05):** Lung Cancer Incidence = 39.57 + 4.78 $*$ ln(pounds trans-1,3-dichloropropene release)<br>
+**Vinyl-acetate Model (adjusted $R^2$: 0.20, p-value: < 0.05):** Lung Cancer Incidence = 105 + 0.61 $*$ ln(pounds vinyl-acetate release) - 7.938e-07  $*$ (median income)<br>
+**1,3-butadiene Model (adjusted $R^2$: 0.41, p-value: < 0.05):** Lung Cancer Incidence = 8.32 + 2.24 $*$ ln(pounds 1,3-butadiene release) + 1.56 $*$ (percent current/previous smokers) - 3.90e-07 $*$ (median income)
 
+  
 The plot below shows the relationship between lung cancer incidence and the total amount of chemicals released per county per year for the seven chemicals that we found to be significantly correlated to lung cancer incidence.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
