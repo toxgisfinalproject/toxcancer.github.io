@@ -221,9 +221,16 @@ $(document).ready(function () {
 <h3>Data Sources</h3>
 <p><a href="https://toxmap.nlm.nih.gov/toxmap/download.html"><strong>The Toxic Releases Inventory (TRI)</strong></a> is a dataset compiled by the U.S. Environmental Protection Agency (EPA) and contains comprehensive information describing estimated waste release and transfers of toxic chemicals in the United States between 1987 to present. Following policy passed in 1986, it became required for manufacturing facilities to report their releases of toxic chemicals to the EPA. By making these data public, industries are held accountable for their waste and environmental impact.</p>
 <p><a href="https://seer.cancer.gov/data/"><strong>The Surveillance, Epidemiology, and End Results (SEER) Program</strong></a> is a dataset compiled by the National Cancer Institute (NCI) and contains information that describes cancer statistics in the United States. They compile information from 17 cancer registries across ten states from 1987 to 2009. We extracted the number of new cancer cases down by county level and used census population data to calculate the cancer incidence per year by county.</p>
+<p>Because the SEER data only had number of cases, we used <a href="https://www.census.gov/support/USACdataDownloads.html"><strong>US Census</strong></a> data to calculate cancer incidence. We also hypothesized that smoking would be a significant contributor to cancer, so we used data from <a href="https://www.cdc.gov/brfss/index.html"><strong>Behavioral Risk Factor Surveillance System</strong></a> to link smoking to cancer incidence.</p>
 </div>
 <div id="analysis" class="section level3">
 <h3>Analysis</h3>
+<p>We summarized cancer and toxic waste data in several interactive plots using Shiny, and these plots can be viewed <a href="https://jamesdalg.shinyapps.io/seer_dash/">here</a>. <a href="https://www.hindawi.com/journals/jeph/2011/463701/">Previous research</a> using the SEER and TRI datasets inspired us to focus on lung cancer as a cancer that could be linked geographically to amount of toxic waste released. We performed multiple linear regression for known carcinogens and found seven chemicals that were strongly correlated in the positive direction with lung cancer at the county level. More details on this model can be found <a href="https://toxgisfinalproject.github.io/toxcancer.github.io/about.html">here</a>.</p>
+</div>
+<div id="conclusion" class="section level3">
+<h3>Conclusion</h3>
+<p>We recognize that there are many contributing factors towards cancer incidence and our analysis on lung cancer is a simple model of a complex disease. In the future we would want to adjust for additional confounding variables to better understand the effect of industrial waste on cancer outcomes. Finding more specific measurements of exposure and disease such as age-adjusted cancer incidences or patient’s distance from industrial factories would benefit our analysis as well.</p>
+<p>Users should be careful to not conclude causation from our model and visualizations. These tools are meant to better inform individuals about the environmental hazards in their states. However, we hope that our website and data tools can help researchers to explore new hypotheses or evaluate well-established ones.</p>
 </div>
 
 

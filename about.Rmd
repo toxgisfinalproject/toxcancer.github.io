@@ -2,11 +2,13 @@
 title: "Lung Cancer Model"
 ---
 
-We investigated the relationship between chemical release and lung cancer incidence at the county level for seven known carcinogens. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$^*$ and smoking$^{**}$ to be significant predictors of lung cancer incidence, so we included these in our final model.
+We investigated the relationship between chemical release and lung cancer incidence at the county level for different chemicals. Multiple linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We also found median income$^*$ and smoking prevalence$^{**}$ to be significant predictors of lung cancer incidence, so we included these in our final models. We found seven chemicals to have a significant positive correlation between lung cancer incidence and amount of waste released.
 
 $^*$ Median income (in thousands) was adjusted for at the county level by year. 
 
 $^{**}$ Percent of current/previous smokers was adjusted for at the state level by year.
+
+The plot below shows the relationship between lung cancer incidence and the total amount of chemicals released per county per year for the seven chemicals that we found to be significantly correlated to lung cancer incidence.
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -77,8 +79,42 @@ plot_ly(data = lung_spread_income, text = ~paste("State: ", st, '<br>County: ', 
   layout(title = 'Lung Cancer Incidence by Released Waste',
          xaxis = list(title = "Pounds of Annual Released Waste (log-scaled)"),
          yaxis = list(title = "Lung Cancer Incidence per 100 Thousand per Year"))
-```
+``` 
+  
+  
+Because we found the seven chemicals above to be correlated to cancer incidences, we wanted to figure out which industries were responsible for the most releases of each chemical. Below is a graph showing the percent contribution of different industries to the total amount released. The "chemical" industry is by far the largest contributor to most of the carcinogens. A large amount of trans-1,3-dichloropropene is released by the hazardous waste industry, and formaldehyde also has several other major contributors including wood products and the paper industry.
 
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+tri_df = read_csv("./data/tri_df_analysis.csv")                
+
+# filter for only lung cancer chemical's from Joy's analysis
+lung_chemicals = tri_df %>%
+  filter(chemical == "FORMALDEHYDE" | chemical == "ACRYLONITRILE" | chemical == "1,3-BUTADIENE" | chemical == "EPICHLOROHYDRIN" | chemical == "VINYL ACETATE" | chemical == "ETHYL ACRYLATE" | chemical =="TRANS-1,3-DICHLOROPROPENE")
+# sum of total amount of chemical released per industry
+industry_released = lung_chemicals %>%
+  group_by(chemical, industry_sector) %>%
+  summarize(total_per_industry = sum(total_releases))
+# sum of total amount of chemical released
+total_released = lung_chemicals %>%
+  group_by(chemical) %>%
+  summarize(total_release = sum(total_releases))
+# chemicals relating to lung cancer with a new variable showing percent each industry contributes
+lung_percent = inner_join(total_released, industry_released) %>%
+  mutate(percent_released = total_per_industry/total_release) %>%
+  filter(percent_released > .01) # filter to not include industries that contribute less than 1% to total released
+
+library(viridis)
+# visualization showing percent contribution from each industry
+lung_percent %>%
+  mutate(industry_sector = fct_reorder(industry_sector, percent_released)) %>%
+  ggplot(aes(x = chemical, y = percent_released, fill = industry_sector)) +
+  geom_bar(stat = "identity") +
+  theme(legend.position = "bottom") +
+  #scale_fill_viridis(discrete = TRUE, option = "plasma") +
+  theme_bw() +
+  coord_flip() +
+  labs(x = "Chemical", y = "Percent Released", color = "Industry Sector", title = "Percent Contribution of Carcinogens Released from Different Industries")
+```
 
 
 

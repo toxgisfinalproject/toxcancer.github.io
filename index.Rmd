@@ -13,33 +13,15 @@ It is well known that exposure to certain chemicals can be a causal factor for m
 
 [**The Surveillance, Epidemiology, and End Results (SEER) Program**](https://seer.cancer.gov/data/) is a dataset compiled by the National Cancer Institute (NCI) and contains information that describes cancer statistics in the United States. They compile information from 17 cancer registries across ten states from 1987 to 2009.  We extracted the number of new cancer cases down by county level and used census population data to calculate the cancer incidence per year by county.
 
+Because the SEER data only had number of cases, we used [**US Census**](https://www.census.gov/support/USACdataDownloads.html) data to calculate cancer incidence. We also hypothesized that smoking would be a significant contributor to cancer, so we used data from [**Behavioral Risk Factor Surveillance System**](https://www.cdc.gov/brfss/index.html) to link smoking to cancer incidence.
+
 ### Analysis
+We summarized cancer and toxic waste data in several interactive plots using Shiny, and these plots can be viewed [here](https://jamesdalg.shinyapps.io/seer_dash/). [Previous research](https://www.hindawi.com/journals/jeph/2011/463701/) using the SEER and TRI datasets inspired us to focus on lung cancer as a cancer that could be linked geographically to amount of toxic waste released. We performed multiple linear regression for known carcinogens and found seven chemicals that were strongly correlated in the positive direction with lung cancer at the county level. More details on this model can be found [here](https://toxgisfinalproject.github.io/toxcancer.github.io/about.html).
 
+### Conclusion
+We recognize that there are many contributing factors towards cancer incidence and our analysis on lung cancer is a simple model of a complex disease. In the future we would want to adjust for additional confounding variables to better understand the effect of industrial waste on cancer outcomes. Finding more specific measurements of exposure and disease such as age-adjusted cancer incidences or patient’s distance from industrial factories would benefit our analysis as well.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Users should be careful to not conclude causation from our model and visualizations. These tools are meant to better inform individuals about the environmental hazards in their states. However, we hope that our website and data tools can help researchers to explore new hypotheses or evaluate well-established ones.  
 
 
 
