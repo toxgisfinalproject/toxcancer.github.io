@@ -13,7 +13,7 @@ $^{**}$ percent of current/previous smokers was adjusted for at the state level 
   
 ### Regression Models for Lung Cancer Incidence
   
-The table below shows the slope coefficients for each chemical in our linear models.
+The table below shows the slope coefficients for each chemical in our linear models. The slope represents the estimated change in lung cancer incidence (per 100,000 individuals) for one unit increase in ln(pound) chemical release.
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(plotly)
