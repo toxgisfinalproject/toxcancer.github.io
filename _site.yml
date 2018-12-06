@@ -5,8 +5,10 @@ navbar:
   right:
     - text: "Lung Cancer Model"
       href: about.html
-    - text: "TRI-SEER Dashboard"
+    - text: "Dashboard"
       href: https://jamesdalg.shinyapps.io/seer_dash/
+    - icon: fab fa-youtube
+      href: https://www.youtube.com/watch?v=dpc0hYkKlSE&feature=youtu.be
     - icon: fa-github fa-lg
       href: https://github.com/toxgisfinalproject/report
 output:

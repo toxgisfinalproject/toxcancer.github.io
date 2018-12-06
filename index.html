@@ -190,7 +190,13 @@ $(document).ready(function () {
   <a href="about.html">Lung Cancer Model</a>
 </li>
 <li>
-  <a href="https://jamesdalg.shinyapps.io/seer_dash/">TRI-SEER Dashboard</a>
+  <a href="https://jamesdalg.shinyapps.io/seer_dash/">Dashboard</a>
+</li>
+<li>
+  <a href="https://www.youtube.com/watch?v=dpc0hYkKlSE&amp;feature=youtu.be">
+    <span class="fab fa fab fa-youtube"></span>
+     
+  </a>
 </li>
 <li>
   <a href="https://github.com/toxgisfinalproject/report">
@@ -216,16 +222,26 @@ $(document).ready(function () {
 <div id="project-motivation" class="section level3">
 <h3>Project Motivation</h3>
 <p>It is well known that exposure to certain chemicals can be a causal factor for many cancers, and many of the chemicals released from industry are carcinogenic. For this project, we wanted to know if we could use datasets that are publicly available to see if there is a geographic association between incidences of cancer and amount of toxic waste dumping. We hope our project results can help people understand the importance of reducing the amount of toxic waste dumping and create a cleaner, healthier living environment.</p>
+<p>For a brief explanation of our project, you can watch our <a href="https://www.youtube.com/watch?v=dpc0hYkKlSE&amp;feature=youtu.be">video</a>.</p>
 </div>
 <div id="data-sources" class="section level3">
 <h3>Data Sources</h3>
-<p><a href="https://toxmap.nlm.nih.gov/toxmap/download.html"><strong>The Toxic Releases Inventory (TRI)</strong></a> is a dataset compiled by the U.S. Environmental Protection Agency (EPA) and contains comprehensive information describing estimated waste release and transfers of toxic chemicals in the United States between 1987 to present. Following policy passed in 1986, it became required for manufacturing facilities to report their releases of toxic chemicals to the EPA. By making these data public, industries are held accountable for their waste and environmental impact.</p>
-<p><a href="https://seer.cancer.gov/data/"><strong>The Surveillance, Epidemiology, and End Results (SEER) Program</strong></a> is a dataset compiled by the National Cancer Institute (NCI) and contains information that describes cancer statistics in the United States. They compile information from 17 cancer registries across ten states from 1987 to 2009. We extracted the number of new cancer cases down by county level and used census population data to calculate the cancer incidence per year by county.</p>
-<p>Because the SEER data only had number of cases, we used <a href="https://www.census.gov/support/USACdataDownloads.html"><strong>US Census</strong></a> data to calculate cancer incidence. We also hypothesized that smoking would be a significant contributor to cancer, so we used data from <a href="https://www.cdc.gov/brfss/index.html"><strong>Behavioral Risk Factor Surveillance System</strong></a> to link smoking to cancer incidence.</p>
+<p><a href="https://toxmap.nlm.nih.gov/toxmap/download.html">The Toxic Releases Inventory (TRI)</a> is a dataset compiled by the U.S. Environmental Protection Agency (EPA) and contains comprehensive information describing estimated waste release and transfers of toxic chemicals in the United States between 1987 to present. Following policy passed in 1986, it became required for manufacturing facilities to report their releases of toxic chemicals to the EPA. By making these data public, industries are held accountable for their waste and environmental impact.</p>
+<p><a href="https://seer.cancer.gov/data/">The Surveillance, Epidemiology, and End Results (SEER) Program</a> is a dataset compiled by the National Cancer Institute (NCI) and contains information that describes cancer statistics in the United States. They compile information from 17 cancer registries across ten states from 1987 to 2009. We extracted the number of new cancer cases down by county level and used census population data to calculate the cancer incidence per year by county.</p>
+<p>Because the SEER data only had number of cases, we used <a href="https://www.census.gov/support/USACdataDownloads.html">US Census</a> data to calculate cancer incidence. We also hypothesized that smoking would be a significant contributor to cancer, so we used data from <a href="https://www.cdc.gov/brfss/index.html">Behavioral Risk Factor Surveillance System</a> to link smoking to cancer incidence.</p>
 </div>
 <div id="analysis" class="section level3">
 <h3>Analysis</h3>
-<p>We summarized cancer and toxic waste data in several interactive plots using Shiny, and these plots can be viewed <a href="https://jamesdalg.shinyapps.io/seer_dash/">here</a>. <a href="https://www.hindawi.com/journals/jeph/2011/463701/">Previous research</a> using the SEER and TRI datasets inspired us to focus on lung cancer as a cancer that could be linked geographically to amount of toxic waste released. We performed multiple linear regression for known carcinogens and found seven chemicals that were strongly correlated in the positive direction with lung cancer at the county level. More details on this model can be found <a href="https://toxgisfinalproject.github.io/toxcancer.github.io/about.html">here</a>.</p>
+<div id="lung-cancer-model" class="section level4">
+<h4><a href="https://toxgisfinalproject.github.io/toxcancer.github.io/about.html">Lung Cancer Model</a></h4>
+<p><a href="https://www.hindawi.com/journals/jeph/2011/463701/">Previous research</a> using the SEER and TRI datasets inspired us to focus on lung cancer as a cancer that could be linked geographically to amount of toxic waste released. We performed multiple linear regression for known carcinogens and found seven chemicals that were strongly correlated in the positive direction with lung cancer at the county level.</p>
+</div>
+<div id="dashboard" class="section level4">
+<h4><a href="https://jamesdalg.shinyapps.io/seer_dash/">Dashboard</a></h4>
+<p>In the exploratory dashboard, we present several interactive plots that allow for users to explore industrial waste release and cancer incidences across different states and counties. These plots are derived from our exploratory analysis and take advantage of the Shiny web app interactivity that gives the user control to choose specific chemicals and cancers they might be interested in. Due to limiting cancer incidence data, we only include 10 states.</p>
+<p>A choropleth map in the first dashboard tab displays change in cancer incidence over time at the county level. The slope measurement represents the estimated change in cancer incidence per 100,000 individuals from 1987 to 2009. An additional choropleth map shows the density of waste release by county area. Individual waste release sites can be seen from the blue markers.</p>
+<p>Cancer incidence over time is visualized in a spaghetti plot representing ten states in the US. Users can select different cancers they are interested in and visualize time trends. A second plot derived from the TRI dataset shows industrial waste released over time and can be filtered to examine different chemicals in different states. The stacked line plot shows the contribution of different waste release routes (air, water, land, offsite) to the total sum of waste released.</p>
+</div>
 </div>
 <div id="conclusion" class="section level3">
 <h3>Conclusion</h3>
