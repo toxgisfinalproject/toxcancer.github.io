@@ -185,7 +185,7 @@ plot_ly(data = lung_spread_income, text = ~paste("State: ", st, '<br>County: ', 
 ### How are we exposed to these chemicals?
 Because we found the seven chemicals above to be correlated to cancer incidences, we wanted to figure out which industries were responsible for the most releases of each chemical. Below is a graph showing the percent contribution of different industries to the total amount released. The chemical industry is by far the largest contributor to most of the carcinogens. Our model suggests that environmental exposure to chemicals released by these industries may contribute to lung cancer incidence.
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=8.5}
 tri_df = read_csv("./data/tri_df_analysis.csv")                
 
 # filter for only lung cancer chemical's from Joy's analysis
@@ -212,8 +212,9 @@ lung_percent %>%
   geom_bar(stat = "identity") +
   theme_bw() +
   theme(legend.position = "bottom") +
+  guides(fill = guide_legend(reverse=TRUE, title = NULL)) +
   coord_flip() +
-  labs(x = "Chemical", y = "Percent Released", color = "Industry Sector", title = "Percent Contribution of Carcinogens Released by Industry")
+  labs(x = "Chemical", y = "Percent Released", title = "Percent Contribution of Carcinogens Released by Industry")
 ```
 
 
