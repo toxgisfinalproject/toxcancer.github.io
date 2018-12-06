@@ -4,26 +4,16 @@ title: "Lung Cancer Model"
 
 Lung cancer is the leading cause of cancer deaths in the United States. While previous research has demonstrated a clear association between tobacco use and lung cancer, many new cases of lung cancer arise amongst non-smokers. We hypothesized that proximity to chemical waste release may increase the risk for lung cancer. Furthermore, proximity may increase exposure to airborne waste release.
   
-We investigated the relationship between chemical release and lung cancer incidence, at the county level, for seven known carcinogens. Linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds, by year) as the main effect. We adjusted for two potential confounders, median income$^*$ as a proxy for socioeconomic status and prevalence of current or previous smokers$^{**}$. Based on our findings, we conclude that acrylonitrile, epichlorohydrin, ethyl-acrylate, formaldehyde, trans-1,3-dichloropropene, 1,3-butadiene release are significant predictors of lung cancer incidence (p-value < 0.05). In our analysis, median income and smoking prevalence were not significant confounders for epichlorohydrin and trans-1,3-dichloropropene release. 
+We investigated the relationship between chemical release and lung cancer incidence at the county level for seven known carcinogens. Linear regression models were fitted with lung cancer incidence (per 100,000 individuals per year) as the main response and chemical release (log-pounds by year) as the main effect. We adjusted for two potential confounders, median income$^*$ as a proxy for socioeconomic status and prevalence of current or previous smokers$^{**}$. Based on our findings, we conclude that acrylonitrile, epichlorohydrin, ethyl-acrylate, formaldehyde, trans-1,3-dichloropropene, 1,3-butadiene release are significant predictors of lung cancer incidence (p-value < 0.05). In our analysis, median income and smoking prevalence were not significant confounders for epichlorohydrin and trans-1,3-dichloropropene release. 
   
-Adjusting for median income, vinyl-acetate release approaches significance (p-value = 0.07) as a predictor of lung cancer incidence. In separate analyses, we find that smoking prevalence and vinyl acetate are independent predictors of lung cancer incidence. Furthermore, vinyl acetate release and smoking prevalence are correlated to an extent that is similar to the relationship between vinyl acetate and lung cancer incidence. Together in multiple linear regression model, both are not significant predictors, suggesting that these two predictors may be redundant and accounting for similar portions of the random errors in the model. If these are redundant variables, we might conclude that there is some relationship that makes the variables non-independent in nature. Indeed, this may be the case: In a mass spectrometry [analysis](https://www.ncbi.nlm.nih.gov/pubmed/12433113) of cigarette data, it was found that vinyl acetate is a component of cigarette smoke. Therefore, we removed smoking prevalence as a covariate from our model. 
+Lastly, vinyl-acetate release approaches significance (p-value = 0.07) as a predictor of lung cancer incidence, adjusting for median income. In separate analyses, we find that smoking prevalence and vinyl acetate release are collinear parameters. This finding suggests that there is an underlying relationship that makes the variables non-independent in nature. Indeed, this may be the case: In a mass spectrometry [analysis](https://www.ncbi.nlm.nih.gov/pubmed/12433113) of cigarette data , it was found that vinyl acetate is a component of cigarette smoke. As such, we removed smoking prevalence as a potential confounder in our model. <br>
   
 $^*$ median income (in thousands) was adjusted for at the county level by year<br>
 $^{**}$ percent of current/previous smokers was adjusted for at the state level by year
-
-### Regression Models for Lung Cancer Incidence
-
-**Acrylonitrile Model (adjusted $R^2$: 0.29, p-value: < 0.05):** Lung Cancer Incidence = 24.37 + 4.09 $*$ ln(pounds acrylonitrile release) + 8.23e-01 $*$ (percent current/previous smokers) - 1.798e-07 $*$ (median income)<br>
-**Epichlorohydrin Model (adjusted $R^2$: 0.15, p-value: < 0.05):** Lung Cancer Incidence = 59.58 + 2.18 $*$ ln(pounds epichlorohydrin release)<br>
-**Ethyl-acrylate Model (adjusted $R^2$: 0.25, p-value: < 0.05):** Lung Cancer Incidence = 60.63 + 1.24 $*$ ln(pounds ethyl-acrylate release) + 0.88 $*$ (percent current/previous smokers) - 7.257e-07 $*$ (median income)<br>
-**Formaldehyde Model (adjusted $R^2$: 0.21, p-value: < 0.05):** Lung Cancer Incidence = 17.81 + 1.40 $*$ ln(pounds formaldehyde release) + 1.15 $*$ (percent current/previous smokers) - 2.77e-7 $*$ (median income)<br>
-**Trans-1,3-dichloropropene Model (adjusted $R^2$: 0.90, p-value: < 0.05):** Lung Cancer Incidence = 39.57 + 4.78 $*$ ln(pounds trans-1,3-dichloropropene release)<br>
-**Vinyl-acetate Model (adjusted $R^2$: 0.20, p-value: < 0.05):** Lung Cancer Incidence = 105 + 0.61 $*$ ln(pounds vinyl-acetate release) - 7.938e-07  $*$ (median income)<br>
-**1,3-butadiene Model (adjusted $R^2$: 0.41, p-value: < 0.05):** Lung Cancer Incidence = 8.32 + 2.24 $*$ ln(pounds 1,3-butadiene release) + 1.56 $*$ (percent current/previous smokers) - 3.90e-07 $*$ (median income)
-
   
-The plot below shows the relationship between lung cancer incidence and the total amount of chemicals released per county per year for the seven chemicals that we found to be significantly correlated to lung cancer incidence.
-
+### Regression Models for Lung Cancer Incidence
+  
+The table below shows the slope coefficients for each chemical in our linear models.
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(plotly)
@@ -81,6 +71,103 @@ lung_spread_income = dplyr::left_join(lung_spread, census_income_df, by = c("cou
     incidence_100k = round((prevalence * 100000), digits = 0)) %>% 
   dplyr::select(incidence_100k, everything())
 
+tobacco_2010_present = read_csv(file = "./data/BRFD_tobacco_2010_present.csv") %>% 
+  filter(Response == "Never") %>% 
+  dplyr::select(year = "YEAR", st = "LocationAbbr", response = "Response", percent_never = "Data_Value") %>%
+  janitor::clean_names() %>% 
+  mutate(percent_smoke = as.numeric(100 - percent_never),
+         st = tolower(st),
+         year = as.numeric(year)) %>% 
+  dplyr::select(year, st, percent_smoke)
+  
+tobacco_2010_prior = read_csv(file = "./data/BRFD_tobacco_2010_prior.csv") %>% 
+  filter(Response == "Never") %>% 
+  dplyr::select(year = "YEAR", st = "LocationAbbr", response = "Response", percent_never = "Data_Value") %>%
+  janitor::clean_names() %>% 
+  mutate(percent_smoke = as.numeric(100 - percent_never),
+         st = tolower(st),
+         year = as.numeric(year)) %>% 
+  dplyr::select(year, st, percent_smoke)
+tobacco = bind_rows(tobacco_2010_present, tobacco_2010_prior)
+lung_income_tobacco = left_join(lung_spread_income, tobacco, by = c("year" = "year", "st" = "st")) %>%
+  dplyr::select(percent_smoke, everything())
+
+# Fit for formaldehyde
+fit_formaldehyde = lung_income_tobacco %>% 
+  lm(incidence_100k ~ formaldehyde + percent_smoke + log(med_income), data = .) 
+table1 = summary(fit_formaldehyde) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_1 = summary(fit_formaldehyde) %>% 
+  broom::tidy() %>% 
+  filter(term == "formaldehyde")
+# Fit for acrylonitrile
+fit_acrylonitrile = lung_income_tobacco %>% 
+  lm(incidence_100k ~ acrylonitrile + percent_smoke + med_income, data = .) 
+table2 = summary(fit_acrylonitrile) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_2 = summary(fit_acrylonitrile) %>% 
+  broom::tidy() %>%
+  filter(term == "acrylonitrile")
+# Fit for x1_3_butadiene
+fit_butadiene = lung_income_tobacco %>% 
+  lm(incidence_100k ~ x1_3_butadiene + percent_smoke + med_income, data = .) 
+table3 = summary(fit_butadiene) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_3 = summary(fit_butadiene) %>% 
+  broom::tidy() %>% 
+  filter(term == "x1_3_butadiene") %>% 
+  mutate(term = str_replace(term, "x1_3_butadiene", "1,3-butadiene"))
+# Fit for epichlorohydrin
+fit_epichlorohydrin = lung_income_tobacco %>% 
+  lm(incidence_100k ~ epichlorohydrin, data = .) 
+table4 = summary(fit_epichlorohydrin) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_4 = summary(fit_epichlorohydrin) %>% 
+  broom::tidy() %>% 
+  filter(term == "epichlorohydrin")
+# Fit for vinyl_acetate
+fit_vinyl_acetate = lung_income_tobacco %>% 
+  lm(incidence_100k ~ vinyl_acetate + med_income, data = .) 
+table5 = summary(fit_vinyl_acetate) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_5 = summary(fit_vinyl_acetate) %>% 
+  broom::tidy() %>% 
+  filter(term == "vinyl_acetate") %>% 
+  mutate(term = str_replace(term, "vinyl_acetate", "vinyl-acetate"))
+# Fit for ethyl_acrylate
+fit_ethyl_acrylate = lung_income_tobacco %>% 
+  lm(incidence_100k ~ ethyl_acrylate + percent_smoke + med_income, data = .) 
+table6 = summary(fit_ethyl_acrylate) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_6 = summary(fit_ethyl_acrylate) %>% 
+  broom::tidy() %>% 
+  filter(term == "ethyl_acrylate") %>% 
+  mutate(term = str_replace(term, "ethyl_acrylate", "ethyl-acrylate"))
+# Fit for trans-1,3-dichloropropene
+fit_dichloropropene = lung_income_tobacco %>% 
+  lm(incidence_100k ~ trans_1_3_dichloropropene, data = .) 
+table7 = summary(fit_dichloropropene) %>% 
+  broom::tidy() %>% knitr::kable()
+chem_7 = summary(fit_dichloropropene) %>% 
+  broom::tidy() %>% 
+  filter(term == "trans_1_3_dichloropropene") %>% 
+  mutate(term = str_replace(term, "trans_1_3_dichloropropene", "trans-1,3-dichloropropene"))
+# Beta1 Table
+beta1_table = bind_rows(chem_1, chem_2, chem_3, chem_4, chem_5, chem_6, chem_7) %>% 
+  arrange(term) %>% 
+  mutate(
+    estimate = round(estimate, digits = 2),
+    std.error = round(std.error, digits = 2),
+    statistic = round(statistic, digits = 2)) %>% 
+  select(chemical = term, "slope estimate" = estimate, everything())
+beta1_table %>% knitr::kable()
+```
+  
+### Scatterplot
+The plot below shows the relationship between lung cancer incidence and the total amount of chemicals released per county per year for the seven chemicals that we found to be significantly correlated to lung cancer incidence.
+  
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 ## plotly graph
 plot_ly(data = lung_spread_income, text = ~paste("State: ", st, '<br>County: ', county, '<br>Year: ', year), colors = "Set1") %>% 
   add_trace(x = ~acrylonitrile, y = ~incidence_100k, color = I("tomato"), name = 'acrylonitrile', opacity = 0.8) %>% 
@@ -95,8 +182,8 @@ plot_ly(data = lung_spread_income, text = ~paste("State: ", st, '<br>County: ', 
          yaxis = list(title = "Lung Cancer Incidence per 100 Thousand per Year"))
 ``` 
   
-  
-Because we found the seven chemicals above to be correlated to cancer incidences, we wanted to figure out which industries were responsible for the most releases of each chemical. Below is a graph showing the percent contribution of different industries to the total amount released. The "chemical" industry is by far the largest contributor to most of the carcinogens. A large amount of trans-1,3-dichloropropene is released by the hazardous waste industry, and formaldehyde also has several other major contributors including wood products and the paper industry.
+### How are we exposed to these chemicals?
+Because we found the seven chemicals above to be correlated to cancer incidences, we wanted to figure out which industries were responsible for the most releases of each chemical. Below is a graph showing the percent contribution of different industries to the total amount released. The chemical industry is by far the largest contributor to most of the carcinogens. Our model suggests that environmental exposure to chemicals released by these industries may contribute to lung cancer incidence.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 tri_df = read_csv("./data/tri_df_analysis.csv")                
@@ -123,11 +210,10 @@ lung_percent %>%
   mutate(industry_sector = fct_reorder(industry_sector, percent_released)) %>%
   ggplot(aes(x = chemical, y = percent_released, fill = industry_sector)) +
   geom_bar(stat = "identity") +
-  theme(legend.position = "bottom") +
-  #scale_fill_viridis(discrete = TRUE, option = "plasma") +
   theme_bw() +
+  theme(legend.position = "bottom") +
   coord_flip() +
-  labs(x = "Chemical", y = "Percent Released", color = "Industry Sector", title = "Percent Contribution of Carcinogens Released from Different Industries")
+  labs(x = "Chemical", y = "Percent Released", color = "Industry Sector", title = "Percent Contribution of Carcinogens Released by Industry")
 ```
 
 
