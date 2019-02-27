@@ -36,4 +36,6 @@ We recognize that there are many contributing factors towards cancer incidence a
 Users should be careful to not conclude causation from our model and visualizations. These tools are meant to better inform individuals about the environmental hazards in their states. However, we hope that our website and data tools can help researchers to explore new hypotheses or evaluate well-established ones.  
 
 
+*Project Contributors: James Dalgleish, Joy Hsu, Rachel Tsong, Yishan Wang, Adina Zhang*
+
 
